@@ -11,6 +11,7 @@ type UserUseCase interface {
 	PagedUsers(pageSize int, pageNumber int) (users []data.User, err error)
 	CreateUser(user *data.User) (err error)
 	DeleteUser(id string) (err error)
+	UpdateUser(user *data.User) (err error)
 }
 
 //UserRepository user repository interface
@@ -20,4 +21,5 @@ type UserRepository interface {
 	PagedUsers(pageSize int, pageNumber int) (users []data.User, err error)
 	CreateUser(user data.User) (err error)
 	DeleteUser(id string) (err error)
+	UpdateUser(user data.User) (err error)
 }

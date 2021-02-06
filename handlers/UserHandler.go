@@ -8,6 +8,7 @@ import (
 
 	"github.com/DenisKnez/simpleWebGolang/data"
 	"github.com/DenisKnez/simpleWebGolang/domains"
+	"github.com/google/uuid"
 )
 
 //UserHandler user handler
@@ -129,9 +130,8 @@ func (handler *UserHandler) PagedUsers(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-
 //DeleteUser deletes a user with the provided id
-func (handler *UserHandler) DeleteUser(w http.ResponseWriter, r *http.Request){
+func (handler *UserHandler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 
 	id := r.URL.Query().Get("id")
 
@@ -146,8 +146,42 @@ func (handler *UserHandler) DeleteUser(w http.ResponseWriter, r *http.Request){
 		return
 	}
 
-
 	w.WriteHeader(http.StatusOK)
 	return
 }
 
+//UpdateUser gets all the users
+func (handler *UserHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
+
+	id := r.URL.Query().Get("id")
+
+	if id == "" {
+		http.Error(w, "Required parameter id was not provided", http.StatusBadRequest)
+		return
+	}
+
+	user := data.User{}
+	err := json.NewDecoder(r.Body).Decode(&user)
+
+	if err != nil {
+		http.Error(w, "Failed to decode provided json", http.StatusBadRequest)
+		return
+	}
+
+	user.ID, err = uuid.Parse(id)
+
+	if err != nil {
+		http.Error(w, "Provided parameter id was not valid", http.StatusBadRequest)
+		return
+	}
+
+	err = handler.userUseCase.UpdateUser(&user)
+
+	if err != nil {
+		http.Error(w, "Could not update user", http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	return
+}

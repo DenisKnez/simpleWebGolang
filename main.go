@@ -37,8 +37,10 @@ func main() {
 	sm.HandleFunc("/users/createuser", userHandler.CreateUser)
 	// GET /users/paged?pagesize={1}&pagenumber={2}
 	sm.HandleFunc("/users/paged", userHandler.PagedUsers)
-	// GET /users/delete/id?id={1}
+	// DELETE /users/delete/id?id={1}
 	sm.HandleFunc("/users/delete/id", userHandler.DeleteUser)
+	// PUT /users/update/id?id={1}
+	sm.HandleFunc("/users/update/id", userHandler.UpdateUser)
 
 	//Books
 

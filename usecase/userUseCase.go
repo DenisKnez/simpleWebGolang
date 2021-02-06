@@ -57,3 +57,17 @@ func (userUC *userUseCase) DeleteUser(id string) (err error){
 
 	return
 }
+
+func (userUC *userUseCase) UpdateUser(user *data.User) (err error){
+
+	user.UpdatedAt = time.Now()
+
+	err = userUC.repo.UpdateUser(*user)
+
+	if err != nil {
+		fmt.Println("Failed to update user data")
+		return
+	}
+
+	return
+}

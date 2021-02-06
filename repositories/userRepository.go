@@ -134,3 +134,31 @@ func (userRepo *userRepository) DeleteUser(id string) (err error) {
 
 	return
 }
+
+//UpdateUser deletes the user with the provided id
+func (userRepo *userRepository) UpdateUser(user data.User) (err error) {
+
+	stmt, err := util.Db.Prepare(`UPDATE users SET 
+		name = $2,
+		lastname = $3,
+		age = $4,
+		email = $5,
+		password = $6,
+		updated_at = $7
+		WHERE id = $1`)
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	defer stmt.Close()
+	_, err = stmt.Exec(user.ID, user.Name, user.Lastname, user.Age, user.Email, user.Password, user.UpdatedAt)
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	return
+}
