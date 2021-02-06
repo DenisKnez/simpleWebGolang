@@ -8,6 +8,7 @@ import (
 
 	"github.com/DenisKnez/simpleWebGolang/data"
 	"github.com/DenisKnez/simpleWebGolang/domains"
+	"github.com/google/uuid"
 )
 
 //BookHandler book handler
@@ -147,5 +148,41 @@ func (handler *BookHandler) DeleteBook(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	return
+}
+
+//UpdateBook gets all the Books
+func (handler *BookHandler) UpdateBook(w http.ResponseWriter, r *http.Request) {
+
+	id := r.URL.Query().Get("id")
+
+	if id == "" {
+		http.Error(w, "Required parameter id was not provided", http.StatusBadRequest)
+		return
+	}
+
+	Book := data.Book{}
+	err := json.NewDecoder(r.Body).Decode(&Book)
+
+	if err != nil {
+		http.Error(w, "Failed to decode provided json", http.StatusBadRequest)
+		return
+	}
+
+	Book.ID, err = uuid.Parse(id)
+
+	if err != nil {
+		http.Error(w, "Provided parameter id was not valid", http.StatusBadRequest)
+		return
+	}
+
+	err = handler.usecase.UpdateBook(&Book)
+
+	if err != nil {
+		http.Error(w, "Could not update Book", http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
 	return
 }

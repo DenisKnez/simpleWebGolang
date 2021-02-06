@@ -54,6 +54,8 @@ func main() {
 	sm.HandleFunc("/books/paged", bookHandler.PagedBooks)
 	// GET /books/delete/id?id={1}
 	sm.HandleFunc("/books/delete/id", bookHandler.DeleteBook)
+	// PUT /books/update/id?id={1}
+	sm.HandleFunc("/books/update/id", bookHandler.UpdateBook)
 
 	http.ListenAndServe(":9090", sm)
 

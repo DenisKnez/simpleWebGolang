@@ -11,7 +11,7 @@ type Book struct {
 	ID          uuid.UUID  `json:"-"`
 	Title       string     `json:"title"`
 	Author      string     `json:"author"`
-	ReleaseDate time.Time  `json:"releaseDate"`
+	ReleaseDate *time.Time `json:"release_date"`
 	CreatedAt   time.Time  `json:"-"`
 	UpdatedAt   time.Time  `json:"-"`
 	DeletedAt   *time.Time `json:"-"`

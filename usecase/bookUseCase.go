@@ -78,3 +78,18 @@ func (bookUC *bookUseCase) DeleteBook(id string) (err error) {
 	}
 	return
 }
+
+func (bookUC *bookUseCase) UpdateBook(book *data.Book) (err error){
+
+	book.UpdatedAt = time.Now()
+
+
+	err = bookUC.bookRepo.UpdateBook(*book)
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	return
+}

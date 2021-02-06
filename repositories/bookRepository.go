@@ -61,7 +61,7 @@ func (bookRepo *bookRepository) Books() (books []data.Book, err error) {
 //PagedBooks return books based on parameters
 func (bookRepo *bookRepository) PagedBooks(pageSize int, pageNumber int) (books []data.Book, err error) {
 
-	offset := (pageSize * pageNumber - pageSize)
+	offset := (pageSize*pageNumber - pageSize)
 
 	rows, err := bookRepo.conn.Query(
 		`SELECT 
@@ -71,7 +71,6 @@ func (bookRepo *bookRepository) PagedBooks(pageSize int, pageNumber int) (books 
 		LIMIT $1
 		OFFSET $2
 		`, pageSize, offset)
-
 
 	fmt.Println(rows)
 
@@ -145,3 +144,30 @@ func (bookRepo *bookRepository) DeleteBook(id string) (err error) {
 	return
 }
 
+//UpdateBook deletes the book with the provided id
+func (bookRepo *bookRepository) UpdateBook(book data.Book) (err error) {
+
+	fmt.Println(book)
+
+	stmt, err := util.Db.Prepare(`UPDATE books SET 
+		title = $2,
+		author = $3,
+		release_date = $4,
+		updated_at = $5
+		WHERE id = $1`)
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	defer stmt.Close()
+	_, err = stmt.Exec(book.ID, book.Title, book.Author, book.ReleaseDate, book.UpdatedAt)
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	return
+}
