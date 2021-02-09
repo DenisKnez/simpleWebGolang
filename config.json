@@ -4,7 +4,7 @@
         "ProjectVersion": "0.0.1"
     },
     "Databases": {
-        "PostgresConnection": "postgres://postgres:rootPassword@localhost:5432/simplewebgolang?sslmode=disable"
+        "PostgresConnection": "postgres://postgres:rootPassword@localhost:5432/test?sslmode=disable"
     },
     "Logging": {
         "DirLocation": "../simpleWebGolangLog",

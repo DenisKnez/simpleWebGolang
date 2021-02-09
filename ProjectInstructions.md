@@ -22,7 +22,7 @@
     - **ext:** The extension of the folder, **sql** in this example
 
     ```powershell
-    migrate create -ext sql -dir db/migrations                                   -seq {migration_name}
+    migrate create -ext sql -dir db/migrations/v1                                   -seq {migration_name}
     ```
 
 </br>
@@ -82,7 +82,16 @@ Example:
   logger.Printf("method GetUserById | %s", err)
 ```
 
+</br>
+</br>
+</br>
 
+
+## **Naming Conventions**
+---
+
+
+fk_book
 
 
 
