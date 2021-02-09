@@ -34,7 +34,7 @@ func (handler *UserHandler) GetUser(w http.ResponseWriter, r *http.Request) {
 	user, err := handler.userUseCase.GetUserByID(id)
 
 	if err != nil {
-		http.Error(w, "The user with the id does not exist", http.StatusBadRequest)
+		http.Error(w, "The user with the id does not exist", http.StatusNotFound)
 		return
 	}
 

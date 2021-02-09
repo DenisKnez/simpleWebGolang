@@ -118,7 +118,7 @@ func (handler *BookHandler) GetBook(w http.ResponseWriter, r *http.Request) {
 	book, err := handler.usecase.GetBookByID(id)
 
 	if err != nil {
-		http.Error(w, "Could not find book", http.StatusInternalServerError)
+		http.Error(w, "Could not find book", http.StatusNotFound)
 		return
 	}
 
