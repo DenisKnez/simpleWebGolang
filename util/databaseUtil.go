@@ -2,10 +2,10 @@ package util
 
 import (
 	"database/sql"
-	"fmt"
 
 	"github.com/google/uuid"
 
+	"github.com/DenisKnez/simpleWebGolang/diutils"
 	//used to provide a driver for the postgresql database
 	_ "github.com/jackc/pgx/v4/stdlib"
 )
@@ -19,13 +19,17 @@ func CreateUUID() uuid.UUID {
 var Db *sql.DB
 
 func init() {
+	config := diutils.GetConfig()
+	_, logger := diutils.GetLogger()
+	connString := config.GetString("Databases.PostgresConnection")
+
 	var err error
 
-	Db, err = sql.Open("pgx", "user=postgres password=rootPassword dbname=simplewebgolang sslmode=disable")
+	Db, err = sql.Open("pgx", connString)
 
 	if err != nil {
-		fmt.Println("ERROR: ")
-		fmt.Println(err)
+		logger.Printf("method init | %s", err)
+		panic("Database connection failed")
 	}
 
 	return

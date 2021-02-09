@@ -23,6 +23,9 @@ func NewUserUseCase(repo domains.UserRepository, logger *log.Logger) domains.Use
 
 func (userUC *userUseCase) GetUserByID(id string) (user data.User, err error) {
 	user, err = userUC.repo.GetUserByID(id)
+
+	fmt.Println(err)
+
 	return
 }
 
@@ -47,8 +50,7 @@ func (userUC *userUseCase) CreateUser(user *data.User) (err error) {
 	return
 }
 
-
-func (userUC *userUseCase) DeleteUser(id string) (err error){
+func (userUC *userUseCase) DeleteUser(id string) (err error) {
 	err = userUC.repo.DeleteUser(id)
 
 	if err != nil {
@@ -58,7 +60,7 @@ func (userUC *userUseCase) DeleteUser(id string) (err error){
 	return
 }
 
-func (userUC *userUseCase) UpdateUser(user *data.User) (err error){
+func (userUC *userUseCase) UpdateUser(user *data.User) (err error) {
 
 	user.UpdatedAt = time.Now()
 
