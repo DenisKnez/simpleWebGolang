@@ -1,0 +1,13 @@
+{
+    "Project": {
+        "ProjectName": "SimpleWebGolang",
+        "ProjectVersion": "0.0.1"
+    },
+    "Databases": {
+        "PostgresConnection": "postgres://postgres:rootPassword@localhost:5432/simplewebgolang?sslmode=disable"
+    },
+    "Logging": {
+        "DirLocation": "../simpleWebGolangLog",
+        "FileLocation": "../simpleWebGolangLog/logs.txt"
+    }
+}
