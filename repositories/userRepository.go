@@ -1,10 +1,9 @@
 package repositories
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
-
-	"database/sql"
 
 	"github.com/DenisKnez/simpleWebGolang/data"
 	"github.com/DenisKnez/simpleWebGolang/domains"
@@ -28,7 +27,9 @@ func (userRepo *userRepository) GetUserByID(id string) (user data.User, err erro
 	err = util.Db.QueryRow("SELECT id, name, lastname, age, email, password, created_at, updated_at, deleted_at, is_deleted FROM users WHERE id = $1 AND is_deleted = false", id).
 		Scan(&user.ID, &user.Name, &user.Lastname, &user.Age, &user.Email, &user.Password, &user.CreatedAt, &user.UpdatedAt, &user.DeletedAt, &user.IsDeleted)
 
-	fmt.Println(err)
+	if err != nil {
+		userRepo.logger.Printf("method GetUserById | %s", err)
+	}
 	return
 }
 
@@ -37,14 +38,14 @@ func (userRepo *userRepository) Users() (users []data.User, err error) {
 	rows, err := util.Db.Query("SELECT id, name, lastname, age, email, password, created_at, updated_at, deleted_at, is_deleted FROM users WHERE is_deleted = false")
 
 	if err != nil {
-		fmt.Println(err)
+		userRepo.logger.Printf("method Users | %s", err)
 		return
 	}
 
 	for rows.Next() {
 		user := data.User{}
 		if err = rows.Scan(&user.ID, &user.Name, &user.Lastname, &user.Age, &user.Email, &user.Password, &user.CreatedAt, &user.UpdatedAt, &user.DeletedAt, &user.IsDeleted); err != nil {
-			fmt.Println(err)
+			userRepo.logger.Printf("method Users | %s", err)
 			return
 		}
 
@@ -70,7 +71,7 @@ func (userRepo *userRepository) PagedUsers(pageSize int, pageNumber int) (users 
 		OFFSET $2`, pageSize, offset)
 
 	if err != nil {
-		fmt.Println(err)
+		userRepo.logger.Printf("method PagedUsers | %s", err)
 		return
 	}
 
@@ -78,7 +79,7 @@ func (userRepo *userRepository) PagedUsers(pageSize int, pageNumber int) (users 
 		user := data.User{}
 		fmt.Println(user)
 		if err = rows.Scan(&user.ID, &user.Name, &user.Lastname, &user.Age, &user.Email, &user.Password, &user.CreatedAt, &user.UpdatedAt, &user.DeletedAt, &user.IsDeleted); err != nil {
-			fmt.Println(err)
+			userRepo.logger.Printf("method PagedUsers | %s", err)
 			return
 		}
 
@@ -99,14 +100,14 @@ func (userRepo *userRepository) CreateUser(user data.User) (err error) {
 	defer stmt.Close()
 
 	if err != nil {
-		fmt.Println(err)
+		userRepo.logger.Printf("method CreateUser | %s", err)
 		return
 	}
 
-	result, stmtErr := stmt.Exec(user.ID, user.Name, user.Lastname, user.Age, user.Email, user.Password, user.CreatedAt, user.UpdatedAt, user.DeletedAt, user.IsDeleted)
+	result, err := stmt.Exec(user.ID, user.Name, user.Lastname, user.Age, user.Email, user.Password, user.CreatedAt, user.UpdatedAt, user.DeletedAt, user.IsDeleted)
 
-	if stmtErr != nil {
-		fmt.Println(stmtErr)
+	if err != nil {
+		userRepo.logger.Printf("method CreateUser | %s", err)
 		return
 	}
 
@@ -120,7 +121,7 @@ func (userRepo *userRepository) DeleteUser(id string) (err error) {
 	stmt, err := util.Db.Prepare("DELETE FROM users WHERE id = $1")
 
 	if err != nil {
-		fmt.Println(err)
+		userRepo.logger.Printf("method DeleteUser | %s", err)
 		return
 	}
 
@@ -128,7 +129,7 @@ func (userRepo *userRepository) DeleteUser(id string) (err error) {
 	_, err = stmt.Exec(id)
 
 	if err != nil {
-		fmt.Println(err)
+		userRepo.logger.Printf("method DeleteUser | %s", err)
 		return
 	}
 
@@ -148,7 +149,7 @@ func (userRepo *userRepository) UpdateUser(user data.User) (err error) {
 		WHERE id = $1`)
 
 	if err != nil {
-		fmt.Println(err)
+		userRepo.logger.Printf("method UpdateUser | %s", err)
 		return
 	}
 
@@ -156,7 +157,7 @@ func (userRepo *userRepository) UpdateUser(user data.User) (err error) {
 	_, err = stmt.Exec(user.ID, user.Name, user.Lastname, user.Age, user.Email, user.Password, user.UpdatedAt)
 
 	if err != nil {
-		fmt.Println(err)
+		userRepo.logger.Printf("method UpdateUser | %s", err)
 		return
 	}
 

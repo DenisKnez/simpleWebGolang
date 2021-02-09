@@ -40,6 +40,7 @@ func (bookRepo *bookRepository) Books() (books []data.Book, err error) {
 	`)
 
 	if err != nil {
+		bookRepo.logger.Printf("method Books | %s", err)
 		return
 	}
 	defer rows.Close()
@@ -49,6 +50,7 @@ func (bookRepo *bookRepository) Books() (books []data.Book, err error) {
 		err = rows.Scan(&book.ID, &book.Title, &book.Author, &book.ReleaseDate, &book.CreatedAt, &book.UpdatedAt, &book.DeletedAt, &book.IsDeleted)
 
 		if err != nil {
+			bookRepo.logger.Printf("method Books | %s", err)
 			return
 		}
 
@@ -75,7 +77,7 @@ func (bookRepo *bookRepository) PagedBooks(pageSize int, pageNumber int) (books 
 	fmt.Println(rows)
 
 	if err != nil {
-		fmt.Println(err)
+		bookRepo.logger.Printf("method PagedBooks | %s", err)
 		return
 	}
 	defer rows.Close()
@@ -85,7 +87,7 @@ func (bookRepo *bookRepository) PagedBooks(pageSize int, pageNumber int) (books 
 		err = rows.Scan(&book.ID, &book.Title, &book.Author, &book.ReleaseDate, &book.CreatedAt, &book.UpdatedAt, &book.DeletedAt, &book.IsDeleted)
 
 		if err != nil {
-			fmt.Println(err)
+			bookRepo.logger.Printf("method PagedBooks | %s", err)
 			return
 		}
 
@@ -106,18 +108,18 @@ func (bookRepo *bookRepository) CreateBook(book data.Book) (err error) {
 		`)
 
 	if err != nil {
+		bookRepo.logger.Printf("method CreateBook | %s", err)
 		return
 	}
 
 	defer stmt.Close()
 
-	result, err := stmt.Exec(book.ID, book.Title, book.Author, book.ReleaseDate, book.CreatedAt, book.UpdatedAt, book.DeletedAt, book.IsDeleted)
+	_, err = stmt.Exec(book.ID, book.Title, book.Author, book.ReleaseDate, book.CreatedAt, book.UpdatedAt, book.DeletedAt, book.IsDeleted)
 
 	if err != nil {
+		bookRepo.logger.Printf("method CreateBook | %s", err)
 		return
 	}
-
-	bookRepo.logger.Println(result)
 
 	return
 }
@@ -128,7 +130,7 @@ func (bookRepo *bookRepository) DeleteBook(id string) (err error) {
 	stmt, err := bookRepo.conn.Prepare("DELETE FROM books WHERE id = $1")
 
 	if err != nil {
-		fmt.Println(err)
+		bookRepo.logger.Printf("method DeleteBook | %s", err)
 		return
 	}
 
@@ -137,7 +139,7 @@ func (bookRepo *bookRepository) DeleteBook(id string) (err error) {
 	_, err = stmt.Exec(id)
 
 	if err != nil {
-		fmt.Println(err)
+		bookRepo.logger.Printf("method DeleteBook | %s", err)
 		return
 	}
 
@@ -157,7 +159,7 @@ func (bookRepo *bookRepository) UpdateBook(book data.Book) (err error) {
 		WHERE id = $1`)
 
 	if err != nil {
-		fmt.Println(err)
+		bookRepo.logger.Printf("method UpdateBook | %s", err)
 		return
 	}
 
@@ -165,7 +167,7 @@ func (bookRepo *bookRepository) UpdateBook(book data.Book) (err error) {
 	_, err = stmt.Exec(book.ID, book.Title, book.Author, book.ReleaseDate, book.UpdatedAt)
 
 	if err != nil {
-		fmt.Println(err)
+		bookRepo.logger.Printf("method UpdateBook | %s", err)
 		return
 	}
 
