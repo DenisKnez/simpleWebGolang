@@ -1,28 +1,62 @@
 package main
 
 import (
+	"log"
 	"net/http"
+	"os"
 
-	"github.com/DenisKnez/simpleWebGolang/diservices"
-	"github.com/DenisKnez/simpleWebGolang/diutils"
-	"github.com/DenisKnez/simpleWebGolang/handlers/routing"
-	_ "github.com/golang-migrate/migrate"
-	_ "github.com/spf13/viper"
+	"github.com/DenisKnez/simpleWebGolang/handlers"
+	"github.com/DenisKnez/simpleWebGolang/repositories"
+	"github.com/DenisKnez/simpleWebGolang/usecase"
+	"github.com/DenisKnez/simpleWebGolang/util"
 )
 
 func main() {
 
-	file, logger := diutils.GetLogger()
-
-	logger.Println("Program started")
-
 	sm := http.NewServeMux()
 
-	// Routing
-	routing.UserRouting(sm, diservices.GetUserHandler())
-	routing.BookRouting(sm, diservices.GetBookHandler())
+	logger := log.New(os.Stdout, "LOG: ", log.Flags())
+
+	// user DI
+	userRepo := repositories.NewUserRepository(util.Db, logger)
+	userUseCase := usecase.NewUserUseCase(userRepo, logger)
+	userHandler := handlers.NewUserHandler(userUseCase)
+
+	// book DI
+	bookRepo := repositories.NewBookRepository(util.Db, logger)
+	bookUseCase := usecase.NewBookUseCase(bookRepo)
+	bookHandler := handlers.NewBookHandler(bookUseCase)
+
+	//Users
+
+	// GET /users
+	sm.HandleFunc("/users", userHandler.GetUsers)
+	// GET /users/id?id=
+	sm.HandleFunc("/users/id", userHandler.GetUser)
+	// POST /users/createuser
+	sm.HandleFunc("/users/createuser", userHandler.CreateUser)
+	// GET /users/paged?pagesize={1}&pagenumber={2}
+	sm.HandleFunc("/users/paged", userHandler.PagedUsers)
+	// DELETE /users/delete/id?id={1}
+	sm.HandleFunc("/users/delete/id", userHandler.DeleteUser)
+	// PUT /users/update/id?id={1}
+	sm.HandleFunc("/users/update/id", userHandler.UpdateUser)
+
+	//Books
+
+	// GET /books
+	sm.HandleFunc("/books", bookHandler.Books)
+	// GET /books/id?id=
+	sm.HandleFunc("/books/id", bookHandler.GetBook)
+	// POST /books/createbook
+	sm.HandleFunc("/books/createbook", bookHandler.CreateBook)
+	// GET /books/paged?pagesize={1}&pagenumber={2}
+	sm.HandleFunc("/books/paged", bookHandler.PagedBooks)
+	// GET /books/delete/id?id={1}
+	sm.HandleFunc("/books/delete/id", bookHandler.DeleteBook)
+	// PUT /books/update/id?id={1}
+	sm.HandleFunc("/books/update/id", bookHandler.UpdateBook)
 
 	http.ListenAndServe(":9090", sm)
-	//Close the log file
-	file.Close()
+
 }
