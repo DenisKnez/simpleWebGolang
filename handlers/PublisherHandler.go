@@ -12,9 +12,8 @@ type PublisherHandler struct {
 	publisherUC domains.PublisherUseCase
 }
 
-
 //NewPublisherHandler create new publisher handler
-func NewPublisherHandler(publisherUC domains.PublisherUseCase) *PublisherHandler{
+func NewPublisherHandler(publisherUC domains.PublisherUseCase) *PublisherHandler {
 	return &PublisherHandler{publisherUC}
 }
 
@@ -30,7 +29,7 @@ func (handler *PublisherHandler) GetPublisher(w http.ResponseWriter, r *http.Req
 	publisher, err := handler.publisherUC.GetPublisherByID(id)
 
 	if err != nil {
-		http.Error(w, "User with the provided id was not found", http.StatusNotFound)
+		http.Error(w, "Publisher with the provided id was not found", http.StatusNotFound)
 		return
 	}
 
@@ -43,3 +42,27 @@ func (handler *PublisherHandler) GetPublisher(w http.ResponseWriter, r *http.Req
 	return
 }
 
+//GetPublisherBooks gets the books by provided publisher
+func (handler *PublisherHandler) GetPublisherBooks(w http.ResponseWriter, r *http.Request) {
+	publisher := r.URL.Query().Get("publisherid")
+
+	if publisher == "" {
+		http.Error(w, "Required parameter publisher was not provided", http.StatusBadRequest)
+		return
+	}
+
+	books, err := handler.publisherUC.GetPublisherBooks(publisher)
+
+	if err != nil {
+		http.Error(w, "Publisher with the provided id was not found", http.StatusNotFound)
+		return
+	}
+
+	err = json.NewEncoder(w).Encode(books)
+
+	if err != nil {
+		http.Error(w, "Couldn't encode the json", http.StatusInternalServerError)
+	}
+
+	return
+}

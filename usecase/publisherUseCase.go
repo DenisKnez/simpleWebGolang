@@ -7,16 +7,14 @@ import (
 	"github.com/DenisKnez/simpleWebGolang/domains"
 )
 
-
-
 //PublisherUseCase publisher use case
 type PublisherUseCase struct {
 	publisherRepo domains.PublisherRepository
-	logger *log.Logger
+	logger        *log.Logger
 }
 
 //NewPublisherUseCase create new publisher use case
-func NewPublisherUseCase(publisherRepo domains.PublisherRepository, logger *log.Logger) domains.PublisherUseCase{
+func NewPublisherUseCase(publisherRepo domains.PublisherRepository, logger *log.Logger) domains.PublisherUseCase {
 	return &PublisherUseCase{publisherRepo, logger}
 }
 
@@ -26,6 +24,17 @@ func (publisherUC *PublisherUseCase) GetPublisherByID(id string) (publisher data
 
 	if err != nil {
 		publisherUC.logger.Printf("method GetPublisherByID | %s", err)
+	}
+
+	return
+}
+
+//GetPublisherBooks gets the books for the provided publisher
+func (publisherUC *PublisherUseCase) GetPublisherBooks(publisherID string) (books []data.Book, err error) {
+	books, err = publisherUC.publisherRepo.GetPublisherBooks(publisherID)
+
+	if err != nil {
+		publisherUC.logger.Printf("method GetPublisherBooks | %s", err)
 	}
 
 	return

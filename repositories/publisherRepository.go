@@ -30,3 +30,23 @@ func (publisherRepo *publisherRepository) GetPublisherByID(id string) (publisher
 
 	return
 }
+
+func (publisherRepo *publisherRepository) GetPublisherBooks(publisherID string) (books []data.Book, err error) {
+	rows, err := publisherRepo.conn.Query("SELECT title, author, release_date FROM books WHERE publisher_id = $1", publisherID)
+
+	for rows.Next() {
+		book := data.Book{}
+
+		err = rows.Scan(&book.Title, &book.Author, &book.ReleaseDate)
+
+		if err != nil {
+			publisherRepo.logger.Printf("method GetPublisherBooks | %s", err)
+			return
+		}
+
+		books = append(books, book)
+	}
+
+	rows.Close()
+	return
+}
