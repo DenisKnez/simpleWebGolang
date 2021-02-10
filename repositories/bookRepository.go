@@ -47,7 +47,7 @@ func (bookRepo *bookRepository) Books() (books []data.Book, err error) {
 
 	for rows.Next() {
 		book := data.Book{}
-		err = rows.Scan(&book.ID, &book.Title, &book.Author, &book.ReleaseDate, &book.CreatedAt, &book.UpdatedAt, &book.DeletedAt, &book.IsDeleted, , &book.PublisherID)
+		err = rows.Scan(&book.ID, &book.Title, &book.Author, &book.ReleaseDate, &book.CreatedAt, &book.UpdatedAt, &book.DeletedAt, &book.IsDeleted, &book.PublisherID)
 
 		if err != nil {
 			bookRepo.logger.Printf("method Books | %s", err)
@@ -84,7 +84,7 @@ func (bookRepo *bookRepository) PagedBooks(pageSize int, pageNumber int) (books 
 
 	for rows.Next() {
 		book := data.Book{}
-		err = rows.Scan(&book.ID, &book.Title, &book.Author, &book.ReleaseDate, &book.CreatedAt, &book.UpdatedAt, &book.DeletedAt, &book.IsDeleted, , &book.PublisherID)
+		err = rows.Scan(&book.ID, &book.Title, &book.Author, &book.ReleaseDate, &book.CreatedAt, &book.UpdatedAt, &book.DeletedAt, &book.IsDeleted, &book.PublisherID)
 
 		if err != nil {
 			bookRepo.logger.Printf("method PagedBooks | %s", err)
