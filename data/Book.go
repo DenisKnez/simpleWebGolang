@@ -16,4 +16,5 @@ type Book struct {
 	UpdatedAt   time.Time  `json:"-"`
 	DeletedAt   *time.Time `json:"-"`
 	IsDeleted   bool       `json:"-"`
+	PublisherID *uuid.UUID `json:"publisher_id"`
 }

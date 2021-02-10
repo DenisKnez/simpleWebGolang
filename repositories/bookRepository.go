@@ -24,8 +24,8 @@ func NewBookRepository(conn *sql.DB, logger *log.Logger) domains.BookRepository 
 //GetBookByID get the book by its id
 func (bookRepo *bookRepository) GetBookByID(id string) (book data.Book, err error) {
 	book = data.Book{}
-	err = util.Db.QueryRow("SELECT id, title, author, release_date, created_at, updated_at, deleted_at FROM books WHERE id = $1 AND is_deleted = false", id).
-		Scan(&book.ID, &book.Title, &book.Author, &book.ReleaseDate, &book.CreatedAt, &book.UpdatedAt, &book.DeletedAt)
+	err = util.Db.QueryRow("SELECT id, title, author, release_date, created_at, updated_at, deleted_at, publisher_id FROM books WHERE id = $1 AND is_deleted = false", id).
+		Scan(&book.ID, &book.Title, &book.Author, &book.ReleaseDate, &book.CreatedAt, &book.UpdatedAt, &book.DeletedAt, &book.PublisherID)
 
 	return
 }
@@ -34,7 +34,7 @@ func (bookRepo *bookRepository) GetBookByID(id string) (book data.Book, err erro
 func (bookRepo *bookRepository) Books() (books []data.Book, err error) {
 	rows, err := bookRepo.conn.Query(
 		`SELECT 
-		id, title, author, release_date, created_at, updated_at, deleted_at, is_deleted
+		id, title, author, release_date, created_at, updated_at, deleted_at, is_deleted, publisher_id
 		FROM books
 			WHERE is_deleted = false
 	`)
@@ -47,7 +47,7 @@ func (bookRepo *bookRepository) Books() (books []data.Book, err error) {
 
 	for rows.Next() {
 		book := data.Book{}
-		err = rows.Scan(&book.ID, &book.Title, &book.Author, &book.ReleaseDate, &book.CreatedAt, &book.UpdatedAt, &book.DeletedAt, &book.IsDeleted)
+		err = rows.Scan(&book.ID, &book.Title, &book.Author, &book.ReleaseDate, &book.CreatedAt, &book.UpdatedAt, &book.DeletedAt, &book.IsDeleted, , &book.PublisherID)
 
 		if err != nil {
 			bookRepo.logger.Printf("method Books | %s", err)
@@ -67,7 +67,7 @@ func (bookRepo *bookRepository) PagedBooks(pageSize int, pageNumber int) (books 
 
 	rows, err := bookRepo.conn.Query(
 		`SELECT 
-			id, title, author, release_date, created_at, updated_at, deleted_at, is_deleted
+			id, title, author, release_date, created_at, updated_at, deleted_at, is_deleted, publisher_id
 		FROM books
 			WHERE is_deleted = false
 		LIMIT $1
@@ -84,7 +84,7 @@ func (bookRepo *bookRepository) PagedBooks(pageSize int, pageNumber int) (books 
 
 	for rows.Next() {
 		book := data.Book{}
-		err = rows.Scan(&book.ID, &book.Title, &book.Author, &book.ReleaseDate, &book.CreatedAt, &book.UpdatedAt, &book.DeletedAt, &book.IsDeleted)
+		err = rows.Scan(&book.ID, &book.Title, &book.Author, &book.ReleaseDate, &book.CreatedAt, &book.UpdatedAt, &book.DeletedAt, &book.IsDeleted, , &book.PublisherID)
 
 		if err != nil {
 			bookRepo.logger.Printf("method PagedBooks | %s", err)
@@ -102,9 +102,9 @@ func (bookRepo *bookRepository) CreateBook(book data.Book) (err error) {
 
 	stmt, err := bookRepo.conn.Prepare(
 		`INSERT INTO books 
-			(id, title, author, release_date, created_at, updated_at, deleted_at, is_deleted )
-		VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-		RETURNING id, title, author, release_date, created_at, updated_at, deleted_at, is_deleted
+			(id, title, author, release_date, created_at, updated_at, deleted_at, is_deleted, publisher_id )
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+		RETURNING id, title, author, release_date, created_at, updated_at, deleted_at, is_deleted, publisher_id
 		`)
 
 	if err != nil {
@@ -114,7 +114,7 @@ func (bookRepo *bookRepository) CreateBook(book data.Book) (err error) {
 
 	defer stmt.Close()
 
-	_, err = stmt.Exec(book.ID, book.Title, book.Author, book.ReleaseDate, book.CreatedAt, book.UpdatedAt, book.DeletedAt, book.IsDeleted)
+	_, err = stmt.Exec(book.ID, book.Title, book.Author, book.ReleaseDate, book.CreatedAt, book.UpdatedAt, book.DeletedAt, book.IsDeleted, book.PublisherID)
 
 	if err != nil {
 		bookRepo.logger.Printf("method CreateBook | %s", err)
@@ -156,6 +156,7 @@ func (bookRepo *bookRepository) UpdateBook(book data.Book) (err error) {
 		author = $3,
 		release_date = $4,
 		updated_at = $5
+		publisher_id = $6
 		WHERE id = $1`)
 
 	if err != nil {
@@ -164,7 +165,7 @@ func (bookRepo *bookRepository) UpdateBook(book data.Book) (err error) {
 	}
 
 	defer stmt.Close()
-	_, err = stmt.Exec(book.ID, book.Title, book.Author, book.ReleaseDate, book.UpdatedAt)
+	_, err = stmt.Exec(book.ID, book.Title, book.Author, book.ReleaseDate, book.UpdatedAt, book.PublisherID)
 
 	if err != nil {
 		bookRepo.logger.Printf("method UpdateBook | %s", err)
