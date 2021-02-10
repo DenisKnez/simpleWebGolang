@@ -19,6 +19,7 @@ func main() {
 	sm := http.NewServeMux()
 
 	// Routing
+	routing.PublisherRouting(sm, diservices.GetPublisherHandler())
 	routing.UserRouting(sm, diservices.GetUserHandler())
 	routing.BookRouting(sm, diservices.GetBookHandler())
 

@@ -10,6 +10,7 @@ import (
 
 var userHandler *handlers.UserHandler
 var bookHandler *handlers.BookHandler
+var publisherHandler *handlers.PublisherHandler
 
 func init() {
 
@@ -25,6 +26,11 @@ func init() {
 	bookRepo := repositories.NewBookRepository(util.Db, logger)
 	bookUseCase := usecase.NewBookUseCase(bookRepo)
 	bookHandler = handlers.NewBookHandler(bookUseCase)
+
+	// publisher DI
+	publisherRepo := repositories.NewPublisherRepository(util.Db, logger)
+	publisherUseCase := usecase.NewPublisherUseCase(publisherRepo, logger)
+	publisherHandler = handlers.NewPublisherHandler(publisherUseCase)
 }
 
 //GetUserHandler Returns the user handler
@@ -35,4 +41,9 @@ func GetUserHandler() *handlers.UserHandler {
 //GetBookHandler Returns the book handler
 func GetBookHandler() *handlers.BookHandler {
 	return bookHandler
+}
+
+//GetPublisherHandler Returns the publisher handler
+func GetPublisherHandler() *handlers.PublisherHandler {
+	return publisherHandler
 }
