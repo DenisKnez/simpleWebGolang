@@ -1,16 +1,17 @@
 package routing
 
-
 import (
 	"net/http"
+
 	"github.com/DenisKnez/simpleWebGolang/handlers"
+	"github.com/DenisKnez/simpleWebGolang/util/middleware"
 )
 
 //UserRouting setup user routes
 func UserRouting (sm *http.ServeMux, userHandler *handlers.UserHandler) {
 
 	// GET /users
-	sm.HandleFunc("/users", userHandler.GetUsers)
+	sm.HandleFunc("/users", middleware.Adapt(userHandler.GetUsers, middleware.NotifyMiddleware()))
 	// GET /users/id?id=
 	sm.HandleFunc("/users/id", userHandler.GetUser)
 	// POST /users/createuser
