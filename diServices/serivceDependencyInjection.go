@@ -24,7 +24,7 @@ func init() {
 
 	// book DI
 	bookRepo := repositories.NewBookRepository(util.Db, logger)
-	bookUseCase := usecase.NewBookUseCase(bookRepo)
+	bookUseCase := usecase.NewBookUseCase(bookRepo, logger)
 	bookHandler = handlers.NewBookHandler(bookUseCase)
 
 	// publisher DI

@@ -1,7 +1,7 @@
 package usecase
 
 import (
-	"fmt"
+	"log"
 	"time"
 
 	"github.com/DenisKnez/simpleWebGolang/data"
@@ -11,11 +11,12 @@ import (
 
 type bookUseCase struct {
 	bookRepo domains.BookRepository
+	logger   *log.Logger
 }
 
 //NewBookUseCase returns new book useCase
-func NewBookUseCase(repo domains.BookRepository) domains.BookUseCase {
-	return &bookUseCase{repo}
+func NewBookUseCase(repo domains.BookRepository, logger *log.Logger) domains.BookUseCase {
+	return &bookUseCase{repo, logger}
 }
 
 func (bookUC *bookUseCase) GetBookByID(id string) (book data.Book, err error) {
@@ -23,7 +24,7 @@ func (bookUC *bookUseCase) GetBookByID(id string) (book data.Book, err error) {
 	book, err = bookUC.bookRepo.GetBookByID(id)
 
 	if err != nil {
-		fmt.Println(err)
+		bookUC.logger.Printf("method GetBookByID | %s", err)
 	}
 
 	return
@@ -34,7 +35,7 @@ func (bookUC *bookUseCase) Books() (books []data.Book, err error) {
 	books, err = bookUC.bookRepo.Books()
 
 	if err != nil {
-		fmt.Println(err)
+		bookUC.logger.Printf("method Books | %s", err)
 		return
 	}
 
@@ -45,7 +46,7 @@ func (bookUC *bookUseCase) PagedBooks(pageSize int, pageNumber int) (books []dat
 	books, err = bookUC.bookRepo.PagedBooks(pageSize, pageNumber)
 
 	if err != nil {
-		fmt.Println(err)
+		bookUC.logger.Printf("method PagedBooks | %s", err)
 		return
 	}
 
@@ -62,7 +63,7 @@ func (bookUC *bookUseCase) CreateBook(book *data.Book) (err error) {
 	err = bookUC.bookRepo.CreateBook(*book)
 
 	if err != nil {
-		fmt.Print(err)
+		bookUC.logger.Printf("method CreateBook | %s", err)
 		return
 	}
 
@@ -74,20 +75,19 @@ func (bookUC *bookUseCase) DeleteBook(id string) (err error) {
 	err = bookUC.bookRepo.DeleteBook(id)
 
 	if err != nil {
-		println(err)
+		bookUC.logger.Printf("method DeleteBook | %s", err)
 	}
 	return
 }
 
-func (bookUC *bookUseCase) UpdateBook(book *data.Book) (err error){
+func (bookUC *bookUseCase) UpdateBook(book *data.Book) (err error) {
 
 	book.UpdatedAt = time.Now()
-
 
 	err = bookUC.bookRepo.UpdateBook(*book)
 
 	if err != nil {
-		fmt.Println(err)
+		bookUC.logger.Printf("method UpdateBook | %s", err)
 		return
 	}
 
