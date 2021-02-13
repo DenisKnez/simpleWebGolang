@@ -5,7 +5,7 @@
 - using golang migration library for schema migrations
 - using pqx as a postgres driver for the database/sql standard library
 - using viper for configuration file management
-
+- using jwt-go for jwt creation and verification 
 
 ## **Migrations**
 ---
