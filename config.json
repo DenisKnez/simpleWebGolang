@@ -9,5 +9,9 @@
     "Logging": {
         "DirLocation": "../simpleWebGolangLog",
         "FileLocation": "../simpleWebGolangLog/logs.txt"
+    },
+    "Auth": {
+        "JwtAccessTokenSecretKey": "Yqnm8YhD1SrCattA9bzx2a2SlDkAoD0y",
+        "JwtRefreshTokenSecretKey": "NKexpK8TfMmM3EbMgLVmvxd5chWhAN"
     }
 }
