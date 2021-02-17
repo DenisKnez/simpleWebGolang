@@ -7,14 +7,11 @@ import (
 )
 
 //AuthRouting setup user routes
-func AuthRouting(sm *http.ServeMux, bookHandler *handlers.BookHandler) {
+func AuthRouting(sm *http.ServeMux, authHandler *handlers.AuthHandler) {
 
-	// GET auth/signup
-	sm.HandleFunc("/auth/signup", bookHandler.Books)
+	// POST auth/refresh
+	sm.HandleFunc("/auth/refresh", authHandler.Refresh)
 
-	// GET auth/login
-	sm.HandleFunc("/auth/login", bookHandler.Books)
-
-	// GET auth/refresh
-	sm.HandleFunc("auth/refresh", bookHandler.Books)
+	// GET auth/test/token
+	sm.HandleFunc("/auth/test/token", authHandler.TestToken)
 }
