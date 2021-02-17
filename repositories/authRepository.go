@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"log"
 
-	"github.com/DenisKnez/simpleWebGolang/data"
 	"github.com/DenisKnez/simpleWebGolang/domains"
 )
 
@@ -18,17 +17,15 @@ func NewAuthRepository(conn *sql.DB, logger *log.Logger) domains.AuthRepository 
 	return &authRepository{logger, conn}
 }
 
-
 //GetUserPassByEmail gets the user password with the provided email
-func(repo *authRepository) GetUserPassByEmail(email string) (password string, err error){
+func (repo *authRepository) GetUserPassByEmail(email string) (password string, err error) {
 	err = repo.conn.QueryRow("SELECT password FROM users WHERE email = $1", email).
-						Scan(&password)
+		Scan(&password)
 	if err != nil {
 		repo.logger.Printf("method GetUserPassByEmail | %s", err)
 		return
-		
+
 	}
 
-	return 
+	return
 }
-
