@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	//"github.com/DenisKnez/simpleWebGolang/util"
 )
 
 //User user entity

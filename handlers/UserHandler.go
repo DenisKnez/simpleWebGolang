@@ -27,6 +27,7 @@ func (handler *UserHandler) GetUser(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
 
 	if id == "" {
+		w.WriteHeader(http.StatusBadRequest)
 		http.Error(w, "user id was not provided", http.StatusBadRequest)
 		return
 	}
@@ -34,18 +35,20 @@ func (handler *UserHandler) GetUser(w http.ResponseWriter, r *http.Request) {
 	user, err := handler.userUseCase.GetUserByID(id)
 
 	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
 		http.Error(w, "The user with the id does not exist", http.StatusNotFound)
 		return
 	}
 
+	w.WriteHeader(http.StatusFound)
 	err = json.NewEncoder(w).Encode(user)
 
 	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
 		http.Error(w, "Json encoding failed", http.StatusInternalServerError)
 		return
 	}
 
-	w.WriteHeader(http.StatusFound)
 	return
 }
 
@@ -59,14 +62,17 @@ func (handler *UserHandler) GetUsers(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusFound)
+
 	err = json.NewEncoder(w).Encode(users)
 
 	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
 		http.Error(w, "Json encoding failed", http.StatusInternalServerError)
 		return
 	}
 
-	w.WriteHeader(http.StatusFound)
 	return
 }
 
