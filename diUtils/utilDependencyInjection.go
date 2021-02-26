@@ -1,4 +1,4 @@
-package diutils
+package diUtils
 
 import (
 	"log"
@@ -17,6 +17,6 @@ func GetLogger() (file *os.File, log *log.Logger) {
 }
 
 //GetConfig get config file
-func GetConfig() *viper.Viper {
-	return config
+func GetConfig() viper.Viper {
+	return *config
 }

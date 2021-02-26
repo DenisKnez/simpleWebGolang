@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/spf13/viper"
+	viper "github.com/spf13/viper"
 )
 
 //SetupLogger creates the file and the directory for logging and returns

@@ -7,7 +7,7 @@ import (
 
 	"github.com/DenisKnez/simpleWebGolang/domains"
 	"github.com/dgrijalva/jwt-go"
-	"github.com/spf13/viper"
+	viper "github.com/spf13/viper"
 )
 
 //Claims auth claims
@@ -16,7 +16,7 @@ type Claims struct {
 }
 
 //AuthMiddleware is a middleware authentication
-func AuthMiddleware(authUseCase *domains.AuthUseCase, config *viper.Viper) Adapter {
+func AuthMiddleware(authUseCase domains.AuthUseCase, config viper.Viper) Adapter {
 	return func(handler func(w http.ResponseWriter, r *http.Request)) func(w http.ResponseWriter, r *http.Request) {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 

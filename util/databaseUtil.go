@@ -5,7 +5,7 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/DenisKnez/simpleWebGolang/diutils"
+	utils "github.com/DenisKnez/simpleWebGolang/diUtils"
 	//used to provide a driver for the postgresql database
 	_ "github.com/jackc/pgx/v4/stdlib"
 )
@@ -19,8 +19,8 @@ func CreateUUID() uuid.UUID {
 var Db *sql.DB
 
 func init() {
-	config := diutils.GetConfig()
-	_, logger := diutils.GetLogger()
+	config := utils.GetConfig()
+	_, logger := utils.GetLogger()
 	connString := config.GetString("Databases.PostgresConnection")
 
 	var err error

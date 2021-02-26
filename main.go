@@ -3,26 +3,27 @@ package main
 import (
 	"net/http"
 
-	"github.com/DenisKnez/simpleWebGolang/diservices"
-	"github.com/DenisKnez/simpleWebGolang/diutils"
-	"github.com/DenisKnez/simpleWebGolang/handlers/routing"
+	//services "github.com/DenisKnez/simpleWebGolang/diservices"
+	utils "github.com/DenisKnez/simpleWebGolang/diutils"
+	//"github.com/DenisKnez/simpleWebGolang/handlers/routing"
 	_ "github.com/golang-migrate/migrate"
 	_ "github.com/spf13/viper"
 )
 
 func main() {
 
-	file, logger := diutils.GetLogger()
+	file, logger := utils.GetLogger()
 
 	logger.Println("Program started")
 
 	sm := http.NewServeMux()
 
+
 	// Routing
-	routing.AuthRouting(sm, diservices.GetAuthHandler())
-	routing.PublisherRouting(sm, diservices.GetPublisherHandler())
-	routing.UserRouting(sm, diservices.GetUserHandler())
-	routing.BookRouting(sm, diservices.GetBookHandler())
+	// routing.AuthRouting(sm, services.GetAuthHandler())
+	// routing.PublisherRouting(sm, services.GetPublisherHandler())
+	// routing.UserRouting(sm, services.GetUserHandler())
+	// routing.BookRouting(sm, services.GetBookHandler())
 
 	http.ListenAndServe(":9090", sm)
 	//Close the log file

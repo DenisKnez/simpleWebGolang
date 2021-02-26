@@ -1,7 +1,7 @@
 package setuputil
 
 import (
-	"github.com/spf13/viper"
+	viper "github.com/spf13/viper"
 )
 
 //SetupConfig setup viper to return config options
@@ -10,10 +10,11 @@ func SetupConfig() *viper.Viper {
 	config.SetConfigName("config")
 	config.SetConfigType("json")
 	config.AddConfigPath(".")
+	config.AddConfigPath("E:\\Projects\\GoProjects\\simpleWebGolang")
 	err := config.ReadInConfig()
 
 	if err != nil {
-		panic("Viper setup failed")
+		panic("Viper setup failed: " + err.Error())
 	}
 
 	return config
