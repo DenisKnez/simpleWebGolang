@@ -19,11 +19,11 @@ type Claims struct {
 //AuthHandler authentication handler
 type AuthHandler struct {
 	authUseCase domains.AuthUseCase
-	config      *viper.Viper
+	config      viper.Viper
 }
 
 //NewAuthHandler creates a new auth handler
-func NewAuthHandler(authUseCase domains.AuthUseCase, config *viper.Viper) *AuthHandler {
+func NewAuthHandler(authUseCase domains.AuthUseCase, config viper.Viper) *AuthHandler {
 	return &AuthHandler{authUseCase, config}
 }
 
